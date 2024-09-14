@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webhook Event Viewer</title>
+    <style>
+        /* Minimal UI styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .event-container {
+            width: 50%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .event {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>WEBHOOK</h1>
+    <div class="event-container" id="event-container"></div>
+
+    <script>
+        function fetchEvents() {
+            fetch('/get_events')
+                .then(response => response.json())
+                .then(data => {
+                    const eventContainer = document.getElementById('event-container');
+                    eventContainer.innerHTML = '';
+                    data.forEach(event => {
+                        let eventHtml = `<div class="event">
+                                            <strong>${event.author}</strong> ${event.event_type === 'PUSH' ? 'pushed' : (event.event_type === 'PULL_REQUEST' ? 'submitted a pull request' : 'merged')} 
+                                            to <strong>${event.to_branch}</strong> on ${new Date(event.timestamp).toLocaleString()}
+                                        </div>`;
+                        eventContainer.innerHTML += eventHtml;
+                    });
+                });
+        }
+
+        setInterval(fetchEvents, 15000);  // Poll every 15 seconds
+        fetchEvents();  // Initial fetch
+    </script>
+</body>
+</html>
