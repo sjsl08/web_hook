@@ -30,7 +30,7 @@ def handle_webhook():
         }
     
     # Handle pull request event
-    if 'pull_request' in data:  # Uncomment when handling pull request events
+    if 'pull_request' in data:  
         event_type = "PULL_REQUEST"
         event_data = {
             "author": data['pull_request']['user']['login'],
@@ -40,7 +40,7 @@ def handle_webhook():
         }
     
     # Handle merge event
-    if 'merge' in data:  # Uncomment when handling merge events
+    if 'merge' in data:  
         event_type = "MERGE"
         event_data = {
             "author": data['pull_request']['merged_by']['login'],
